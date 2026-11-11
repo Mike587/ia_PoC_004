@@ -1,5 +1,5 @@
 """find_nuclei on synthetic images, and the whole script on a real PoC overview
-(skipped when the ia_PoC_002 example CZIs are not on this machine)."""
+(tests/data/experiment_pos_000077.czi)."""
 
 import json
 import subprocess
@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 from nuclei import find_nuclei  # noqa: E402
 
 PX = 0.35e-6                     # about the PoC overview pixel (20x/0.95 + 2x camera)
-EXAMPLE = Path(r"C:\Users\zeiss\Mike\Image_Analysis\ia_PoC_002\experiment_pos_000077.czi")
+EXAMPLE = ROOT / "tests" / "data" / "experiment_pos_000077.czi"
 
 
 def disc_image(centres_px, radius_px=12, shape=(300, 400), noise=2.0, seed=0):
@@ -54,13 +54,12 @@ def test_flat_image_has_no_nuclei():
     assert nuclei == [] and not seg.any()
 
 
-@pytest.mark.skipif(not EXAMPLE.exists(), reason="ia_PoC_002 example CZI not on this machine")
 def test_script_on_a_real_overview(tmp_path):
     p = subprocess.run([sys.executable, str(ROOT / "analyze_nuclei.py"), str(EXAMPLE), str(tmp_path),
                         "--prefix", "T"], capture_output=True, text=True)
     assert p.returncode == 0, p.stdout + p.stderr
     res = json.loads((tmp_path / "T_targets.json").read_text())
-    assert res["found"] and res["n_nuclei"] == len(res["targets"]) > 10
+    assert res["found"] and res["n_nuclei"] == len(res["targets"]) == 548   # as ia_PoC_002
     cx, cy = res["image_centre_m"]
     for t in res["targets"]:                            # every target inside the field of view
         assert abs(t["x_m"] - cx) < 4096 * PX / 2 and abs(t["y_m"] - cy) < 3008 * PX / 2

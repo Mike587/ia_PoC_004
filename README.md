@@ -40,7 +40,9 @@ nuclei < 25 µm² dropped. The same method and defaults as ia_PoC_002.
 
 ## Checked against ia_PoC_002 (2026-11-11)
 
-On the two ia_PoC_002 example overviews (20x/0.95 + 2x camera, 0.347 µm pixel):
+On the two ia_PoC_002 example overviews (20x/0.95 + 2x camera, 0.347 µm pixel;
+`experiment_pos_000077.czi` is in `tests/data/`, and `test_script_on_a_real_overview`
+checks its 548 nuclei on every test run):
 
 | File | ia_PoC_002 | ia_PoC_004 | Position difference |
 |---|---|---|---|
